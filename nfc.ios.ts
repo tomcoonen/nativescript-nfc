@@ -17,16 +17,12 @@ export class Nfc implements NfcApi, NfcSessionInvalidator {
   private delegate: NFCNDEFReaderSessionDelegateImpl;
 
   private static _available(): boolean {
-    const isIOS11OrUp = NSObject.instancesRespondToSelector(
-      "accessibilityAttributedLabel"
-    );
-    if (isIOS11OrUp) {
-      try {
-        return NFCNDEFReaderSession.readingAvailable;
-      } catch (e) {
-        return false;
-      }
-    } else {
+    try {
+      return (
+        typeof NFCNDEFReaderSession !== "undefined" &&
+        NFCNDEFReaderSession.readingAvailable
+      );
+    } catch (e) {
       return false;
     }
   }
@@ -47,7 +43,7 @@ export class Nfc implements NfcApi, NfcSessionInvalidator {
     callback: (data: NfcTagData) => void
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      resolve();
+      resolve(null);
     });
   }
 
@@ -63,7 +59,7 @@ export class Nfc implements NfcApi, NfcSessionInvalidator {
 
       if (callback === null) {
         this.invalidateSession();
-        resolve();
+        resolve(null);
         return;
       }
 
@@ -96,7 +92,7 @@ export class Nfc implements NfcApi, NfcSessionInvalidator {
 
         this.session.beginSession();
 
-        resolve();
+        resolve(null);
       } catch (e) {
         reject(e);
       }
@@ -112,7 +108,7 @@ export class Nfc implements NfcApi, NfcSessionInvalidator {
 
   public stopListening(): Promise<any> {
     return new Promise((resolve, reject) => {
-      resolve();
+      resolve(null);
     });
   }
 

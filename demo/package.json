@@ -1,26 +1,25 @@
 {
+  "main": "app.js",
+  "scripts": {
+    "test": "ns test",
+    "test.android": "ns test android",
+    "test.ios": "ns test ios"
+  },
   "dependencies": {
-    "nativescript-nfc": "file:../src",
-    "nativescript-theme-core": "~1.0.6",
-    "nativescript-unit-test-runner": "0.7.0",
-    "@nativescript/core": "~7.0.11"
+    "@nativescript/core": "~9.0.0",
+    "nativescript-nfc": "file:..",
+    "nativescript-theme-core": "~1.0.6"
   },
   "devDependencies": {
-    "@nativescript/android": "7.0.0",
-    "@nativescript/ios": "7.0.6",
-    "@nativescript/types": "~7.0.4",
-    "@nativescript/webpack": "~3.0.7",
-    "babel-traverse": "6.26.0",
-    "babel-types": "6.26.0",
-    "babylon": "6.18.0",
-    "filewalker": "0.1.2",
-    "jasmine-core": "^2.5.2",
-    "karma": "4.1.0",
-    "karma-jasmine": "2.0.1",
-    "karma-nativescript-launcher": "^0.4.0",
-    "karma-webpack": "3.0.5",
-    "lazy": "1.0.11",
-    "typescript": "3.9.7"
-  },
-  "main": "app.js"
+    "@nativescript/android": "~9.0.0",
+    "@nativescript/ios": "~9.0.0",
+    "@nativescript/types": "~9.0.0",
+    "@nativescript/unit-test-runner": "~3.0.0",
+    "@nativescript/webpack": "~5.0.0",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-webpack": "~5.0.0",
+    "typescript": "~5.4.5"
+  }
 }

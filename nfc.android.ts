@@ -1,5 +1,27 @@
-import { AndroidActivityEventData, AndroidActivityNewIntentEventData, AndroidApplication, Application, Utils } from "@nativescript/core";
+import { AndroidActivityEventData, AndroidActivityNewIntentEventData, Application, Utils } from "@nativescript/core";
 import { NdefListenerOptions, NfcApi, NfcNdefData, NfcNdefRecord, NfcTagData, NfcUriProtocols, WriteTagOptions } from "./nfc.common";
+
+function getTagExtra(intent: android.content.Intent): android.nfc.Tag {
+  if (android.os.Build.VERSION.SDK_INT >= 33) {
+    return intent.getParcelableExtra(
+      android.nfc.NfcAdapter.EXTRA_TAG,
+      android.nfc.Tag.class
+    );
+  }
+  return intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG) as android.nfc.Tag;
+}
+
+function getNdefMessagesExtra(intent: android.content.Intent): any[] {
+  if (android.os.Build.VERSION.SDK_INT >= 33) {
+    return intent.getParcelableArrayExtra(
+      android.nfc.NfcAdapter.EXTRA_NDEF_MESSAGES,
+      android.nfc.NdefMessage.class
+    ) as any;
+  }
+  return intent.getParcelableArrayExtra(
+    android.nfc.NfcAdapter.EXTRA_NDEF_MESSAGES
+  ) as any;
+}
 
 declare let Array: any;
 
@@ -25,16 +47,12 @@ export class NfcIntentHandler {
       return;
     }
 
-    let tag = intent.getParcelableExtra(
-      android.nfc.NfcAdapter.EXTRA_TAG
-    ) as android.nfc.Tag;
+    let tag = getTagExtra(intent);
     if (!tag) {
       return;
     }
 
-    let messages = intent.getParcelableArrayExtra(
-      android.nfc.NfcAdapter.EXTRA_NDEF_MESSAGES
-    );
+    let messages = getNdefMessagesExtra(intent);
 
     // every action should map to a different listener you pass in at 'startListening'
     if (action === android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED) {
@@ -285,14 +303,14 @@ export class Nfc implements NfcApi {
 
       // The Nfc adapter may not yet be ready, in case the class was instantiated in a very early stage of the app.
       Application.android.on(
-        AndroidApplication.activityCreatedEvent,
+        Application.android.activityCreatedEvent,
         (args: AndroidActivityEventData) => {
           this.initNfcAdapter();
         }
       );
 
       Application.android.on(
-        AndroidApplication.activityPausedEvent,
+        Application.android.activityPausedEvent,
         (args: AndroidActivityEventData) => {
           let pausingNfcAdapter = android.nfc.NfcAdapter.getDefaultAdapter(
             args.activity
@@ -310,7 +328,7 @@ export class Nfc implements NfcApi {
       );
 
       Application.android.on(
-        AndroidApplication.activityResumedEvent,
+        Application.android.activityResumedEvent,
         (args: AndroidActivityEventData) => {
           let resumingNfcAdapter = android.nfc.NfcAdapter.getDefaultAdapter(
             args.activity
@@ -331,7 +349,7 @@ export class Nfc implements NfcApi {
 
       // fired when a new tag is scanned
       Application.android.on(
-        AndroidApplication.activityNewIntentEvent,
+        Application.android.activityNewIntentEvent,
         (args: AndroidActivityNewIntentEventData) => {
           nfcIntentHandler.savedIntent = this.intent;
           nfcIntentHandler.parseMessage();
@@ -363,7 +381,7 @@ export class Nfc implements NfcApi {
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       onTagDiscoveredListener = callback;
-      resolve();
+      resolve(null);
     });
   }
 
@@ -374,7 +392,7 @@ export class Nfc implements NfcApi {
     return new Promise((resolve, reject) => {
       // TODO use options, some day
       onNdefDiscoveredListener = callback;
-      resolve();
+      resolve(null);
     });
   }
 
@@ -388,9 +406,7 @@ export class Nfc implements NfcApi {
         return;
       }
 
-      let tag = intent.getParcelableExtra(
-        android.nfc.NfcAdapter.EXTRA_TAG
-      ) as android.nfc.Tag;
+      let tag = getTagExtra(intent);
       let records = new Array.create(android.nfc.NdefRecord, 1);
 
       let tnf = android.nfc.NdefRecord.TNF_EMPTY;
@@ -405,7 +421,7 @@ export class Nfc implements NfcApi {
 
       let errorMessage = Nfc.writeNdefMessage(ndefMessage, tag);
       if (errorMessage === null) {
-        resolve();
+        resolve(null);
       } else {
         reject(errorMessage);
       }
@@ -428,9 +444,7 @@ export class Nfc implements NfcApi {
           return;
         }
 
-        let tag = intent.getParcelableExtra(
-          android.nfc.NfcAdapter.EXTRA_TAG
-        ) as android.nfc.Tag;
+        let tag = getTagExtra(intent);
         if (!tag) {
           reject("No tag found to write to");
           return;
@@ -444,7 +458,7 @@ export class Nfc implements NfcApi {
 
         let errorMessage = Nfc.writeNdefMessage(ndefMessage, tag);
         if (errorMessage === null) {
-          resolve();
+          resolve(null);
         } else {
           reject(errorMessage);
         }
@@ -466,11 +480,18 @@ export class Nfc implements NfcApi {
           android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP |
             android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
         );
+        // Android 12 (API 31) requires explicit FLAG_IMMUTABLE or FLAG_MUTABLE.
+        // NFC foreground dispatch needs FLAG_MUTABLE because the OS fills the
+        // intent with EXTRA_TAG / EXTRA_NDEF_MESSAGES when delivering it.
+        let pendingIntentFlags = 0;
+        if (android.os.Build.VERSION.SDK_INT >= 31) {
+          pendingIntentFlags = android.app.PendingIntent.FLAG_MUTABLE;
+        }
         this.pendingIntent = android.app.PendingIntent.getActivity(
           activity,
           0,
           this.intent,
-          0
+          pendingIntentFlags
         );
 
         // The adapter must be started with the foreground activity.

@@ -12,20 +12,14 @@
 
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-nfc/master/screenshots/ios-demo-before-scan.PNG" width="180px" height="320px"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-nfc/master/screenshots/ios-demo-after-scan.PNG" width="180px" height="320px"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-nfc/master/screenshots/android-demo.png" width="180px" height="320px"/>
 
+> Requires NativeScript 7 or newer. For NativeScript 6 and below, pin to `nativescript-nfc@4.1.0`.
+
 ## Installation
 
 From the command prompt go to your app's root folder and execute:
 
-### NativeScript Version 7+:
-
 ```bash
 ns plugin add nativescript-nfc
-```
-
-### NativeScript Version 6 and below:
-
-```bash
-tns plugin add nativescript-nfc@4.1.0
 ```
 
 ## iOS Setup
@@ -58,26 +52,7 @@ The [demo app](demo) has this:
 
 ## Android Setup
 
-> ⚠️ Since plugin version 4.0.0 this section is no longer needed, but you'll HAVE to run NativeScript 5.4.0 or newer. If you're using an older NativeScript, please stick to a plugin version < 4.0.0.
-
-Update the `activity` entry in your `App_Resources/Android/AndroidManifest.xml` file:
-
-```xml
-<activity
-        android:name="com.tns.NativeScriptNfcActivity"
-        android:label="@string/title_activity_kimera"
-        android:configChanges="keyboardHidden|orientation|screenSize">
-```
-
-So replace `com.tns.NativeScriptActivity` with `com.tns.NativeScriptNfcActivity`.
-
-#### Webpack (again, no longer needed from plugin version 4.0.0)
-
-If you're using Webpack to bundle your app you'll need to add 1 line of configuration in case you're targeting Android.
-
-- Open `webpack.config.js` (it's in the root of your project).
-- Look for an Array named `appComponents`, which likely contains stuff like `"tns-core-modules/ui/frame"`.
-- Add `resolve(__dirname, "node_modules/nativescript-nfc/nfc-activity.android.js")` [as shown here](https://github.com/EddyVerbruggen/nativescript-nfc/blob/6dfa0ff4f77cab5ab7f494ac3055f728ce51d131/demo/webpack.config.js#L17).
+No manual setup required. The plugin ships its own NFC activity and is picked up automatically.
 
 ## Demo app (those screenshots above)
 

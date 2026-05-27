@@ -1,0 +1,55 @@
+{
+  "name": "nativescript-nfc",
+  "version": "6.0.0",
+  "description": "NFC plugin for your NativeScript app",
+  "main": "nfc",
+  "typings": "index.d.ts",
+  "nativescript": {
+    "platforms": {
+      "android": "9.0.0",
+      "ios": "9.0.0"
+    }
+  },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "platforms/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc --skipLibCheck",
+    "prepare": "tsc --skipLibCheck",
+    "demo.ios": "npm run build && cd demo && ns run ios",
+    "demo.android": "npm run build && cd demo && ns run android"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomcoonen/nativescript-nfc.git"
+  },
+  "keywords": [
+    "ecosystem:NativeScript",
+    "NativeScript",
+    "Android",
+    "iOS",
+    "NFC",
+    "NDEF"
+  ],
+  "author": {
+    "name": "Eddy Verbruggen",
+    "email": "eddyverbruggen@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/tomcoonen/nativescript-nfc/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/tomcoonen/nativescript-nfc",
+  "peerDependencies": {
+    "@nativescript/core": "^9.0.0"
+  },
+  "devDependencies": {
+    "@nativescript/core": "~9.0.0",
+    "@nativescript/types": "~9.0.0",
+    "typescript": "~5.4.5"
+  }
+}
