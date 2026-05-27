@@ -2,13 +2,10 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
-[![Twitter Follow][twitter-image]][twitter-url]
 
-[npm-image]: http://img.shields.io/npm/v/nativescript-nfc.svg
-[npm-url]: https://npmjs.org/package/nativescript-nfc
-[downloads-image]: http://img.shields.io/npm/dm/nativescript-nfc.svg
-[twitter-image]: https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
-[twitter-url]: https://twitter.com/eddyverbruggen
+[npm-image]: https://img.shields.io/npm/v/@tomcoonen/nativescript-nfc.svg
+[npm-url]: https://npmjs.org/package/@tomcoonen/nativescript-nfc
+[downloads-image]: https://img.shields.io/npm/dm/@tomcoonen/nativescript-nfc.svg
 
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-nfc/master/screenshots/ios-demo-before-scan.PNG" width="180px" height="320px"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-nfc/master/screenshots/ios-demo-after-scan.PNG" width="180px" height="320px"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-nfc/master/screenshots/android-demo.png" width="180px" height="320px"/>
 
@@ -19,7 +16,7 @@
 From the command prompt go to your app's root folder and execute:
 
 ```bash
-ns plugin add nativescript-nfc
+ns plugin add @tomcoonen/nativescript-nfc
 ```
 
 ## iOS Setup
